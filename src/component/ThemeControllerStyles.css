@@ -1,0 +1,17 @@
+.theme__ic-mode {
+    position: absolute;
+    right: 41px;
+    top: 26px;
+    width: 37.5px;
+    height: 37.5px;
+    color: var(--color-primary);
+    transition: transform .2s;
+}
+
+.theme__ic-mode:hover {
+    transform: scale(1.13);
+}
+
+.theme__ic-mode:active {
+    transform: scale(0.97);
+}

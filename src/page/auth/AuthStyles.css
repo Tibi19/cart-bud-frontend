@@ -1,0 +1,103 @@
+.auth {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth__title {
+    font-family: 'Outfit', 'Roboto', sans-serif;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: 90px;
+    margin-bottom: 67.5px;
+    font-size: 3.04rem;
+}
+
+.auth__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth__form__label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.17rem;
+    color: var(--color-text);
+    margin: 0 11px 11px;
+}
+
+.auth__form__input {
+    width: 247.5px;
+    height: 56px;
+    border-radius: 13px;
+    border-style: solid;
+    border-color: var(--color-text);
+    border-width: 3px;
+    background-color: var(--color-background-variant);
+    font-size: 1.4rem;
+    color: var(--color-text);
+    caret-color: var(--color-primary);
+    padding: 0 19px;
+    margin-bottom: 11px;
+}
+
+.auth__form__input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.auth__form__input::placeholder {
+    color: var(--color-text-variant);
+}
+
+.auth__form__error {
+    font-size: 0.7rem;
+    margin: 0 11px 7px;
+    color: #cd2c10;
+}
+
+.auth__form__error::after {
+    content: " ";
+    white-space: pre;
+}
+
+.auth__form__confirm-button {
+    width: 235.5px;
+    height: 51px;
+    align-self: center;
+    background-color: var(--color-primary);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 1.17rem;
+    color: var(--color-text-inverted);
+    border-radius: 13px;
+    border-width: 0px;
+    margin-top: 35px;
+    margin-bottom: 11px;
+    transition: transform .1s
+}
+
+.auth__form__confirm-button:hover {
+    filter: brightness(var(--filter-hover-brightness))
+}
+
+.auth__form__confirm-button:active {
+    transform: scale(.98);
+}
+
+.auth__form__confirm-button + .auth__form__error {
+    align-self: center;
+}
+
+.auth__other-sign-href {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-primary);
+    font-size: 0.7rem;
+    transition: transform .1s;
+    margin-top: 7px;
+}
+
+.auth__other-sign-href:hover {
+    transform: scale(1.03);
+}
