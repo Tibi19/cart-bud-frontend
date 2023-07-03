@@ -1,0 +1,7 @@
+.navbar {
+    width: 30%;
+    min-height: 100vh;
+    background-color: var(--color-background-variant);
+    box-sizing: border-box;
+    border-right: solid var(--color-text) 3px;
+}

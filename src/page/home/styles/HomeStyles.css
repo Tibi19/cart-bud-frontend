@@ -1,0 +1,22 @@
+.home {
+    display: flex;
+}
+
+.home__title {
+    font-family: 'Outfit', 'Roboto', sans-serif;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1.96rem;
+}
+
+.home__label {
+    font-family: 'Outfit', 'Roboto', sans-serif;
+    font-weight: 600;
+    color: var(--color-text-variant);
+    font-size: 1.17rem;
+}
+
+.home__text {
+    color: var(--color-text);
+    font-size: 1.4rem;
+}
