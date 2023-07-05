@@ -19,9 +19,7 @@ const ThemeController = () => {
         <ReactSVG
             src={theme === Theme.LIGHT ? icBulb : icDark}
             content="Switch between light and dark modes"
-            beforeInjection={(svg) => {
-                svg.classList.add("theme__ic-mode")
-            }}
+            beforeInjection={svg => svg.classList.add("theme__ic-mode")}
             onClick={switchTheme}
         />
     )

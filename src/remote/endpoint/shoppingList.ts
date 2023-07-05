@@ -1,24 +1,21 @@
-import { KEY_TOKEN, KEY_USERNAME } from "@/local/keys";
-import { remote } from "@/remote/remote";
-import { AuthRequest } from "../requests";
-import { EndpointHandle, defaultEndpointHandle } from "./handle";
+import { ShoppingList } from "@/model/models"
+import { EndpointHandle, defaultEndpointHandle } from "./handle"
+import { remote } from "@/remote/remote"
+import { GroupListsRequest } from "@/remote/requests"
 
-export const authEndpoint = {
+export const shoppingListEndpoint = {
 
-    signIn: (handle: EndpointHandle<AuthRequest, any, any>) => {
-        const { request, onSuccess, onError, onFallbackError } = { ...defaultEndpointHandle, ...handle }
+    getUserLists: (handle: EndpointHandle<any, ShoppingList[], any>) => {
+        const { onSuccess, onError, onFallbackError } = { ...defaultEndpointHandle, ...handle }
         remote
-            .post("signin", request)
+            .get(`list/user/lists`)
             .then(response => {
                 if (response.status != 200) {
                     console.log(response)
                     onFallbackError()
                     return
                 }
-                const token = response.data["token"]
-                localStorage.setItem(KEY_TOKEN, token)
-                localStorage.setItem(KEY_USERNAME, request?.username || "User")
-                onSuccess()
+                onSuccess(...response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -31,17 +28,22 @@ export const authEndpoint = {
             })
     },
 
-    signUp: (handle: EndpointHandle<AuthRequest, any, any>) => {
+    getGroupLists: (handle: EndpointHandle<GroupListsRequest, ShoppingList[], any>) => {
         const { request, onSuccess, onError, onFallbackError } = { ...defaultEndpointHandle, ...handle }
+        if (!request) {
+            console.log("No group id passed for fetching group lists")
+            onFallbackError()
+            return
+        }
         remote
-            .post("signup", request)
+            .get(`list/group/${request.groupId}/lists`)
             .then(response => {
                 if (response.status != 200) {
                     console.log(response)
                     onFallbackError()
                     return
                 }
-                onSuccess()
+                onSuccess(...response.data)
             })
             .catch(error => {
                 console.log(error)
@@ -53,5 +55,5 @@ export const authEndpoint = {
                 onFallbackError()
             })
     }
-    
+
 }

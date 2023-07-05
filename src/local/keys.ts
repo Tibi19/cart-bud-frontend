@@ -1,2 +1,6 @@
 export const KEY_THEME = "key_theme"
 export const KEY_TOKEN = "key_token"
+export const KEY_USERNAME = "key_username"
+export const KEY_SHOPPING_LISTS = "key_lists"
+export const KEY_GROUPS = "key_groups"
+export const KEY_INVITATIONS = "key_invitations"
