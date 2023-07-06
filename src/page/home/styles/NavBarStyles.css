@@ -1,7 +1,117 @@
 .navbar {
-    width: 30%;
-    min-height: 100vh;
+    width: 375px;
+    height: 100vh;
     background-color: var(--color-background-variant);
     box-sizing: border-box;
     border-right: solid var(--color-text) 3px;
+    overflow-y: auto;
+}
+
+.navbar::-webkit-scrollbar {
+    width: 11px;
+}
+
+.navbar::-webkit-scrollbar-track {
+    background: var(--color-background-variant)
+}
+
+.navbar::-webkit-scrollbar-thumb {
+    background-color: var(--color-scrollbar-thumb);
+    border: 2px solid var(--color-background-variant);
+}
+
+
+
+.navbar__title-row {
+    display: flex;
+    margin: 26.5px 26.5px 48.75px;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.navbar__icon-clickable {
+    color: var(--color-text);
+    transition: transform .2s;
+}
+
+.navbar__icon-clickable:hover {
+    transform: scale(1.13);
+}
+
+.navbar__icon-clickable:active {
+    transform: scale(0.97);
+}
+
+.navbar__icon--out {
+    width: 26.5px;
+    height: 26.5px;
+    position: relative;
+    top: 2px
+}
+
+
+
+.navbar__label-row {
+    display: flex;
+    margin: 41.25px 26.5px 22.5px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar__icon--plus-small {
+    width: 18.75px;
+    height: 18.75px;
+    position: relative;
+    top: 3px;
+}
+
+
+
+.navbar__list-row {
+    display: flex;
+    margin: 0px 26.25px 22.5px 49px;
+}
+
+.navbar__icon-leading {
+    width: 22.5px;
+    height: 22.5px;
+    color: var(--color-text);
+    margin-right: 15px;
+    position: relative;
+    top: 0.5px;
+}
+
+.navbar__icon--options {
+    width: 22.5px;
+    height: 22.5px;
+    color: var(--color-text);
+    position: relative;
+    top: 2px;
+}
+
+.navbar__icon-container--options {
+    margin-left: auto;
+}
+
+
+
+.navbar__group-row {
+    display: flex;
+    margin: 0px 26.25px 22.5px;
+}
+
+.navbar__icon--plus-large {
+    width: 22.5px;
+    height: 22.5px;
+    color: var(--color-text); 
+    margin-left: 15px;
+    position: relative;
+    top: 2px;
+}
+
+
+
+.navbar__invitations-row {
+    display: flex;
+    margin: 0px 26.25px 22.5px;
 }

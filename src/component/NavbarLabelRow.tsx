@@ -10,11 +10,14 @@ interface Props {
 const NavbarLabelRow = ({ title, onAdd, addContent }: Props) => {
     return (
         <span className="navbar__label-row">
-            <p className="home__label">{title}</p>
+            <span className="home__label">{title}</span>
             <ReactSVG
                 src={icPlus}
                 content={addContent}
-                beforeInjection={svg => svg.classList.add("navbar__icon-clickable navbar__icon--plus-small")}
+                beforeInjection={svg => {
+                    svg.classList.add("navbar__icon-clickable")
+                    svg.classList.add("navbar__icon--plus-small")
+                }}
                 onClick={onAdd}
             />
         </span>

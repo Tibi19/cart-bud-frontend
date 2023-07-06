@@ -18,8 +18,9 @@ import icOptions from "@/assets/ic_options.svg"
 import icGroup from "@/assets/ic_group.svg"
 import { useNavigate } from "react-router-dom"
 import NavbarLabelRow from "@/component/NavbarLabelRow"
-import NavbarListRow from "component/NavbarListRow"
-import NavbarGroupRow from "component/NavbarGroupRow"
+import NavbarListRow from "@/component/NavbarListRow"
+import NavbarGroupRow from "@/component/NavbarGroupRow"
+import NavbarInvitationRow from "@/component/NavbarInvitationRow"
 
 const UPDATE_CHANGES_INTERVAL = 8000
 
@@ -37,7 +38,7 @@ const NavBar = () => {
         { id: "cc", parentId: "a", name: "Groceries", hasGroupParent: true, timestampOfLastChange: 0 },
         { id: "dd", parentId: "a", name: "House", hasGroupParent: true, timestampOfLastChange: 0 },
         { id: "ee", parentId: "b", name: "Drinks", hasGroupParent: true, timestampOfLastChange: 0 },
-        { id: "ff", parentId: "b", name: "Snacks", hasGroupParent: true, timestampOfLastChange: 0 },
+        { id: "ff", parentId: "b", name: "Snacks", hasGroupParent: true, timestampOfLastChange: 0 }
     ]
     const invitations = [
         { fromAdminName: "Waldo", groupId: "c", groupName: "Where Is" },
@@ -132,17 +133,19 @@ const NavBar = () => {
     const addUserList = () => {}
     const addGroup = () => {}
     const addGroupList = () => {}
-    const sendInvitation = () => {}
-    const invitationOptions = () => {}
+    const openInvitation = () => {}
 
     return (
         <div className="navbar">
             <span className="navbar__title-row">
-                <p className="home__title">{username}'s CartBud</p>
+                <span className="home__title">{username}'s CartBud</span>
                 <ReactSVG
                     src={icOut}
                     content="Sign out"
-                    beforeInjection={svg => svg.classList.add("navbar__icon-clickable navbar__icon--out")}
+                    beforeInjection={svg => {
+                        svg.classList.add("navbar__icon-clickable")
+                        svg.classList.add("navbar__icon--out")
+                    }}
                     onClick={signOut}
                 />
             </span>
@@ -180,8 +183,19 @@ const NavBar = () => {
                     </>
                 )
             }
-            // TODO Invitations label row
-            // TODO Map invitations to invitation rows
+            <NavbarLabelRow
+                title="Invitations"
+                onAdd={openInvitation}
+                addContent="Send invitation"
+            />
+            {
+                invitations.map(invitation =>
+                    <NavbarInvitationRow
+                        forGroupName={invitation.groupName}
+                        adminName={invitation.fromAdminName}
+                    />
+                )
+            }
         </div>
     )
 }

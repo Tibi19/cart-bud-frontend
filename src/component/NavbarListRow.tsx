@@ -16,11 +16,15 @@ const NavbarListRow = ({ listName }: Props) => {
                 content="Shopping list"
                 beforeInjection={svg => svg.classList.add("navbar__icon-leading")}
             />
-            <p className="home__text">{listName}</p>
+            <span className="home__text">{listName}</span>
             <ReactSVG
                 src={icOptions}
+                className="navbar__icon-container--options"
                 content="List options"
-                beforeInjection={svg => svg.classList.add("navbar__icon-clickable navbar__icon--options-small")}
+                beforeInjection={svg => {
+                    svg.classList.add("navbar__icon-clickable")
+                    svg.classList.add("navbar__icon--options")
+                }}
                 onClick={openListOptions}
             />
         </span>
