@@ -9,124 +9,109 @@ import { shoppingListEndpoint } from "@/remote/endpoint/shoppingList"
 import { invitationEndpoint } from "@/remote/endpoint/invitation"
 import { changesEndpoint } from "@/remote/endpoint/changes"
 import { ChangeRequest } from "@/remote/requests"
-import { clearInterval } from "timers"
 import { ReactSVG } from "react-svg"
 import icOut from "@/assets/ic_out.svg"
-import icPlus from "@/assets/ic_plus.svg"
-import icList from "@/assets/ic_list.svg"
-import icOptions from "@/assets/ic_options.svg"
-import icGroup from "@/assets/ic_group.svg"
 import { useNavigate } from "react-router-dom"
 import NavbarLabelRow from "@/component/NavbarLabelRow"
 import NavbarListRow from "@/component/NavbarListRow"
 import NavbarGroupRow from "@/component/NavbarGroupRow"
 import NavbarInvitationRow from "@/component/NavbarInvitationRow"
+import { emptyUserStorage } from "@/local/emptyUserStorage"
 
 const UPDATE_CHANGES_INTERVAL = 8000
 
 const NavBar = () => {
     const [username] = useState(localStorage.getItem(KEY_USERNAME) || "User")
+    const [groups, setGroups] = useStore<Group[]>(KEY_GROUPS, [])
+    const [shoppingLists, setShoppingLists] = useStore<ShoppingList[]>(KEY_SHOPPING_LISTS, [])
+    const [invitations, setInvitations] = useStore<Invitation[]>(KEY_INVITATIONS, [])
     const navigate = useNavigate()
 
-    const groups = [
-        { id: "a", name: "Family", adminName: "_", isAdmin: false, timestampOfLastChange: 0 },
-        { id: "b", name: "Party", adminName: "_", isAdmin: false, timestampOfLastChange: 0 }
-    ]
-    const shoppingLists = [
-        { id: "aa", parentId: "0", name: "Gaming", hasGroupParent: false, timestampOfLastChange: 0 },
-        { id: "bb", parentId: "0", name: "Books", hasGroupParent: false, timestampOfLastChange: 0 },
-        { id: "cc", parentId: "a", name: "Groceries", hasGroupParent: true, timestampOfLastChange: 0 },
-        { id: "dd", parentId: "a", name: "House", hasGroupParent: true, timestampOfLastChange: 0 },
-        { id: "ee", parentId: "b", name: "Drinks", hasGroupParent: true, timestampOfLastChange: 0 },
-        { id: "ff", parentId: "b", name: "Snacks", hasGroupParent: true, timestampOfLastChange: 0 }
-    ]
-    const invitations = [
-        { fromAdminName: "Waldo", groupId: "c", groupName: "Where Is" },
-        { fromAdminName: "Willy", groupId: "d", groupName: "Wonka's Factory" }
-    ]
+    useEffect(() => {
+        groupEndpoint.getUserGroups({
+            onSuccess: result => {
+                if (!result) return
+                setGroups(result)
+                result.forEach(group => {
+                    shoppingListEndpoint.getGroupLists({
+                        request: { groupId: group.id },
+                        onSuccess: result => {
+                            result && setShoppingLists(current => [...current, ...result])
+                        }
+                    })
+                })
+            }
+        })
 
-    // const [groups, setGroups] = useStore<Group[]>(KEY_GROUPS, [])
-    // const [shoppingLists, setShoppingLists] = useStore<ShoppingList[]>(KEY_SHOPPING_LISTS, [])
-    // const [invitations, setInvitations] = useStore<Invitation[]>(KEY_INVITATIONS, [])
+        shoppingListEndpoint.getUserLists({
+            onSuccess: result => {
+                result && setShoppingLists(current => {
+                    const listsStringified = [...current, ...result].map(list => JSON.stringify(list))
+                    const listsSet = new Set(listsStringified)
+                    const listsArrayUnique: ShoppingList[] = Array
+                        .from(listsSet)
+                        .map(list => JSON.parse(list))
+                    return listsArrayUnique
+                })
+            }
+        })
 
-    // useEffect(() => {
-    //     groupEndpoint.getUserGroups({
-    //         onSuccess: result => {
-    //             if (!result) return
-    //             setGroups(result)
-    //             result.forEach(group => {
-    //                 shoppingListEndpoint.getGroupLists({
-    //                     request: { groupId: group.id },
-    //                     onSuccess: result => {
-    //                         result && setShoppingLists(current => [...current, ...result])
-    //                     }
-    //                 })
-    //             })
-    //         }
-    //     })
+        invitationEndpoint.getUserInvitations({
+            onSuccess: result => result && setInvitations(result)
+        })
+    }, [UPDATE_CHANGES_INTERVAL])
 
-    //     shoppingListEndpoint.getUserLists({
-    //         onSuccess: result => {
-    //             result && setShoppingLists(current => [...current, ...result])
-    //         }
-    //     })
+    const getStateAsChangeRequests = () => {
+        const groupsChangeRequests: ChangeRequest[] = groups.map(group => {
+            return {
+                id: group.id,
+                type: ChangingType.Group,
+                timestampOfLastChange: group.timestampOfLastChange
+            }
+        })
+        const shoppingListsChangeRequests: ChangeRequest[] = shoppingLists.map(list => {
+            return {
+                id: list.id,
+                type: ChangingType.ShoppingList,
+                timestampOfLastChange: list.timestampOfLastChange
+            }            
+        })
+        return [...groupsChangeRequests, ...shoppingListsChangeRequests]
+    }
 
-    //     invitationEndpoint.getUserInvitations({
-    //         onSuccess: result => result && setInvitations(result)
-    //     })
-    // }, [])
+    const updateChanges = () => {
+        const changesRequest = {
+            changes: getStateAsChangeRequests()
+        }
+        changesEndpoint.getChanges({
+            request: changesRequest,
+            onSuccess: result => {
+                if (!result || !result.changesExist) return
+                setGroups(current => {
+                    const updatedIds = result.groups.map(group => group.id)
+                    const unchangedCurrent = current.filter(group => 
+                        !updatedIds.includes(group.id)
+                    )
+                    return [...unchangedCurrent, ...result.groups]
+                })
+                setShoppingLists(current => {
+                    const updatedIds = result.shoppingLists.map(list => list.id)
+                    const unchangedCurrent = current.filter(list => 
+                        !updatedIds.includes(list.id)    
+                    )
+                    return [...unchangedCurrent, ...result.shoppingLists]
+                })
+            }
+        })
+    }
 
-    // const getStateAsChangeRequests = () => {
-    //     const groupsChangeRequests: ChangeRequest[] = groups.map(group => {
-    //         return {
-    //             id: group.id,
-    //             type: ChangingType.Group,
-    //             timestampOfLastChange: group.timestampOfLastChange
-    //         }
-    //     })
-    //     const shoppingListsChangeRequests: ChangeRequest[] = shoppingLists.map(list => {
-    //         return {
-    //             id: list.id,
-    //             type: ChangingType.ShoppingList,
-    //             timestampOfLastChange: list.timestampOfLastChange
-    //         }            
-    //     })
-    //     return [...groupsChangeRequests, ...shoppingListsChangeRequests]
-    // }
-
-    // const updateChanges = () => {
-    //     const changesRequest = {
-    //         changes: getStateAsChangeRequests()
-    //     }
-    //     changesEndpoint.getChanges({
-    //         request: changesRequest,
-    //         onSuccess: result => {
-    //             if (!result || !result.changesExist) return
-    //             setGroups(current => {
-    //                 const updatedIds = result.groups.map(group => group.id)
-    //                 const unchangedCurrent = current.filter(group => 
-    //                     !updatedIds.includes(group.id)
-    //                 )
-    //                 return [...unchangedCurrent, ...result.groups]
-    //             })
-    //             setShoppingLists(current => {
-    //                 const updatedIds = result.shoppingLists.map(list => list.id)
-    //                 const unchangedCurrent = current.filter(list => 
-    //                     !updatedIds.includes(list.id)    
-    //                 )
-    //                 return [...unchangedCurrent, ...result.shoppingLists]
-    //             })
-    //         }
-    //     })
-    // }
-
-    // useEffect(() => {
-    //     const interval = setInterval(() => updateChanges(), UPDATE_CHANGES_INTERVAL)
-    //     return () => clearInterval(interval)
-    // }, [])
+    useEffect(() => {
+        const interval = setInterval(() => updateChanges(), UPDATE_CHANGES_INTERVAL)
+        return () => clearInterval(interval)
+    }, [groups, shoppingLists])
 
     const signOut = () => {
-        localStorage.setItem(KEY_TOKEN, "")
+        emptyUserStorage()
         navigate("/")
     }
 
@@ -158,7 +143,10 @@ const NavBar = () => {
                 shoppingLists
                     .filter(list => !list.hasGroupParent)
                     .map(list => 
-                        <NavbarListRow listName={list.name} />
+                        <NavbarListRow
+                            key={list.id} 
+                            listName={list.name} 
+                        />
                     )
             }
             <NavbarLabelRow
@@ -170,6 +158,7 @@ const NavBar = () => {
                 groups.map(group =>
                     <>
                         <NavbarGroupRow
+                            key={group.id}
                             groupName={group.name}
                             onAddList={addGroupList}
                         />
@@ -177,7 +166,10 @@ const NavBar = () => {
                             shoppingLists
                                 .filter(list => list.parentId === group.id)
                                 .map(list =>
-                                    <NavbarListRow listName={list.name} />
+                                    <NavbarListRow
+                                        key={list.id} 
+                                        listName={list.name} 
+                                    />
                                 )
                         }
                     </>
@@ -191,6 +183,7 @@ const NavBar = () => {
             {
                 invitations.map(invitation =>
                     <NavbarInvitationRow
+                        key={invitation.groupId}
                         forGroupName={invitation.groupName}
                         adminName={invitation.fromAdminName}
                     />

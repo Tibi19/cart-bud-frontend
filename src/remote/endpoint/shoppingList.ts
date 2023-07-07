@@ -15,7 +15,7 @@ export const shoppingListEndpoint = {
                     onFallbackError()
                     return
                 }
-                onSuccess(...response.data)
+                onSuccess([...response.data])
             })
             .catch(error => {
                 console.log(error)
@@ -43,7 +43,7 @@ export const shoppingListEndpoint = {
                     onFallbackError()
                     return
                 }
-                onSuccess(...response.data)
+                onSuccess([...response.data])
             })
             .catch(error => {
                 console.log(error)

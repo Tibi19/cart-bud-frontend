@@ -14,7 +14,7 @@ export const invitationEndpoint = {
                     onFallbackError()
                     return
                 }
-                onSuccess(...response.data)
+                onSuccess([...response.data])
             })
             .catch(error => {
                 console.log(error)
