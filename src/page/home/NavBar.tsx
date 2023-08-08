@@ -1,4 +1,4 @@
-import { KEY_GROUPS, KEY_INVITATIONS, KEY_SHOPPING_LISTS, KEY_TOKEN, KEY_USERNAME } from "@/local/keys"
+import { KEY_GROUPS, KEY_INVITATIONS, KEY_SHOPPING_LISTS, KEY_USERNAME } from "@/local/keys"
 import "./styles/HomeStyles.css"
 import "./styles/NavBarStyles.css"
 import { useEffect, useState } from "react"
@@ -17,6 +17,7 @@ import NavbarListRow from "@/component/NavbarListRow"
 import NavbarGroupRow from "@/component/NavbarGroupRow"
 import NavbarInvitationRow from "@/component/NavbarInvitationRow"
 import { emptyUserStorage } from "@/local/emptyUserStorage"
+import { getUniqueElements } from "@/util/getUniqueElements"
 
 const UPDATE_CHANGES_INTERVAL = 8000
 
@@ -36,7 +37,9 @@ const NavBar = () => {
                     shoppingListEndpoint.getGroupLists({
                         request: { groupId: group.id },
                         onSuccess: result => {
-                            result && setShoppingLists(current => [...current, ...result])
+                            result && setShoppingLists(current => 
+                                getUniqueElements([...current, ...result])
+                            )
                         }
                     })
                 })
@@ -45,14 +48,9 @@ const NavBar = () => {
 
         shoppingListEndpoint.getUserLists({
             onSuccess: result => {
-                result && setShoppingLists(current => {
-                    const listsStringified = [...current, ...result].map(list => JSON.stringify(list))
-                    const listsSet = new Set(listsStringified)
-                    const listsArrayUnique: ShoppingList[] = Array
-                        .from(listsSet)
-                        .map(list => JSON.parse(list))
-                    return listsArrayUnique
-                })
+                result && setShoppingLists(current => 
+                    getUniqueElements([...current, ...result])
+                )
             }
         })
 

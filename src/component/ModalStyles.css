@@ -1,0 +1,70 @@
+ 
+.modal {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-background);
+    padding: 26.25px
+}
+
+.modal__title {
+    font-family: 'Outfit', 'Roboto', sans-serif;
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1.96rem;
+    margin: 0px;
+}
+
+.modal__delimiter {
+    border: 3px solid var(--color-text);
+    border-radius: 13px;
+    margin: 26.25px 0px;
+}
+
+.modal__buttons-row {
+    display: flex;
+    justify-content: end;
+    margin-top: 26.25px;
+}
+
+.modal__button {
+    width: 117.5px;
+    height: 38.25px;
+    align-self: center;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 1.17rem;
+    border-radius: 13px;
+    border-width: 0px;
+    transition: transform .1s
+}
+
+.modal__button:hover {
+    filter: brightness(var(--filter-hover-brightness))
+}
+
+.modal__button:active {
+    transform: scale(.98);
+}
+
+.modal__button--confirm {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverted);
+}
+
+.modal__button--cancel {
+    background-color: transparent;
+    color: var(--color-primary);
+}
+
+
+.create__content-row {
+
+}
+
+.create__content__label {
+
+}
+
+.create__content__input {
+    
+}
