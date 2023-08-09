@@ -18,3 +18,9 @@ export interface ChangeRequest {
     type: ChangingType,
     timestampOfLastChange: number
 }
+
+export interface GroupRequest {
+    id: String,
+    name: String,
+    timestampOfLastChange: Number
+}

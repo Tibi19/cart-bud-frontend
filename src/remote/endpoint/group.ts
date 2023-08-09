@@ -1,6 +1,7 @@
 import { Group } from "@/model/models";
 import { EndpointHandle, defaultEndpointHandle } from "./handle";
 import { remote } from "@/remote/remote";
+import { GroupRequest } from "@/remote/requests";
 
 export const groupEndpoint = {
 
@@ -23,6 +24,25 @@ export const groupEndpoint = {
                     onError()
                     return
                 }
+                onFallbackError()
+            })
+    },
+
+    createGroup: (handle: EndpointHandle<GroupRequest, any, any>) => {
+        const { request, onSuccess, onFallbackError } = { ...defaultEndpointHandle, ...handle}
+        remote
+            .post("group/create", request)
+            .then(response => {
+                if (response.status != 200) {
+                    console.log(response)
+                    onFallbackError()
+                    return
+                }
+                onSuccess()
+            })
+            .catch(error => {
+                console.log(error)
+                const response = error.response
                 onFallbackError()
             })
     }

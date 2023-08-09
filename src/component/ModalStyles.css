@@ -1,29 +1,36 @@
  
 .modal {
+    width: 250px;
     display: flex;
     flex-direction: column;
     background-color: var(--color-background);
-    padding: 26.25px
+    padding: 26.25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 13px;
 }
 
 .modal__title {
     font-family: 'Outfit', 'Roboto', sans-serif;
     font-weight: 600;
+    align-self: center;
     color: var(--color-text);
-    font-size: 1.96rem;
+    font-size: 1.73rem;
     margin: 0px;
 }
 
 .modal__delimiter {
-    border: 3px solid var(--color-text);
-    border-radius: 13px;
-    margin: 26.25px 0px;
+    border: 1.5px solid var(--color-text);
+    margin: 22.5px -26.25px 33.75px;
 }
 
 .modal__buttons-row {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     margin-top: 26.25px;
+    margin-right: 25.25px;
 }
 
 .modal__button {
@@ -57,14 +64,38 @@
 }
 
 
-.create__content-row {
-
+.modal__input-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 11.25px;
 }
 
-.create__content__label {
-
+.modal__input__label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.17rem;
+    color: var(--color-text);
+    margin: 0 11.25px;
 }
 
-.create__content__input {
-    
+.modal__input__box {
+    width: 130px;
+    height: 23px;
+    border-radius: 13px;
+    border-style: solid;
+    border-color: var(--color-text);
+    border-width: 1.8px;
+    background-color: var(--color-background-variant);
+    font-size: 0.9rem;
+    color: var(--color-text);
+    caret-color: var(--color-primary);
+    padding: 0 15px;
+}
+
+.modal__input__box:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.modal__input__box::placeholder {
+    color: var(--color-text-variant);
 }

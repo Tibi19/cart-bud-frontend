@@ -16,11 +16,14 @@ const CreateModal = ({ isOpen, elementTitle, onConfirm, onClose }: Props) => {
         <Modal
             isOpen={isOpen}
             title={`Create ${elementTitle}`}
-            onConfirm={() => onConfirm(elementName)}
+            onConfirm={() => {
+                onConfirm(elementName)
+                onClose()
+            }}
             onClose={onClose}
         >
-            <span className="create__content-row">
-                <p className="create__content__label">Name:</p>
+            <span className="modal__input-row">
+                <p className="modal__input__label">Name:</p>
                 <input
                     type="text"
                     placeholder="Name"
@@ -29,7 +32,7 @@ const CreateModal = ({ isOpen, elementTitle, onConfirm, onClose }: Props) => {
                         e.preventDefault()
                         setElementName(e.target.value)
                     }}
-                    className="create__content__input"
+                    className="modal__input__box"
                 />
             </span>
         </Modal>

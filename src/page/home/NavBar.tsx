@@ -18,8 +18,11 @@ import NavbarGroupRow from "@/component/NavbarGroupRow"
 import NavbarInvitationRow from "@/component/NavbarInvitationRow"
 import { emptyUserStorage } from "@/local/emptyUserStorage"
 import { getUniqueElements } from "@/util/getUniqueElements"
+import CreateModal from "@/component/CreateModal"
+import { v4 as uuidv4 } from "uuid"
 
 const UPDATE_CHANGES_INTERVAL = 8000
+const ERROR_FALLBACK_CREATE_GROUP = "Could not create group. Please try again later."
 
 const NavBar = () => {
     const [username] = useState(localStorage.getItem(KEY_USERNAME) || "User")
@@ -27,6 +30,9 @@ const NavBar = () => {
     const [shoppingLists, setShoppingLists] = useStore<ShoppingList[]>(KEY_SHOPPING_LISTS, [])
     const [invitations, setInvitations] = useStore<Invitation[]>(KEY_INVITATIONS, [])
     const navigate = useNavigate()
+    const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false)
+    const [isCreateGroupListOpen, setIsCreateGroupListOpen] = useState(false)
+    const [isCreateUserListOpen, setIsCreateUserListOpen] = useState(false)
 
     useEffect(() => {
         groupEndpoint.getUserGroups({
@@ -114,7 +120,26 @@ const NavBar = () => {
     }
 
     const addUserList = () => {}
-    const addGroup = () => {}
+    const createGroup = (groupName: string) => {
+        const newGroup: Group = {
+            id: uuidv4(),
+            name: groupName,
+            adminName: username,
+            isAdmin: true,
+            timestampOfLastChange: Date.now()
+        } 
+        groupEndpoint.createGroup({
+            request: {
+                id: newGroup.id,
+                name: newGroup.name,
+                timestampOfLastChange: newGroup.timestampOfLastChange
+            },
+            onSuccess: () => setGroups(current => 
+                [...current, newGroup]
+            ),
+            onFallbackError: () => alert(ERROR_FALLBACK_CREATE_GROUP)
+        })
+    }
     const addGroupList = () => {}
     const openInvitation = () => {}
 
@@ -149,7 +174,7 @@ const NavBar = () => {
             }
             <NavbarLabelRow
                 title="Groups"
-                onAdd={addGroup}
+                onAdd={() => setIsCreateGroupOpen(true)}
                 addContent="Add group"
             />
             {
@@ -186,6 +211,16 @@ const NavBar = () => {
                         adminName={invitation.fromAdminName}
                     />
                 )
+            }
+
+            {
+                isCreateGroupOpen && 
+                <CreateModal 
+                    isOpen={isCreateGroupOpen}
+                    elementTitle="Group"
+                    onConfirm={elementName => createGroup(elementName)}
+                    onClose={() => setIsCreateGroupOpen(false)}
+                />
             }
         </div>
     )

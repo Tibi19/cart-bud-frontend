@@ -39,6 +39,11 @@ const Modal = ({ isOpen, title, onConfirm, onClose, children }: Props) => {
             className="modal"
             isOpen={isOpen}
             onRequestClose={onClose}
+            style={{
+                overlay: {
+                    backgroundColor: "var(--color-scrim)"
+                }
+            }}
         >
             <p className="modal__title">{title}</p>
             <hr className="modal__delimiter"/>

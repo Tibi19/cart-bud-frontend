@@ -17,6 +17,7 @@ body.theme__mode--light {
   --color-text-inverted: #DCD7C9;
   --filter-hover-brightness: 110%;
   --color-scrollbar-thumb: #d0c8be;
+  --color-scrim: #36363680;
 }
 
 body.theme__mode--dark {
@@ -28,4 +29,5 @@ body.theme__mode--dark {
   --color-text-inverted: #363636;
   --filter-hover-brightness: 90%;
   --color-scrollbar-thumb: #3b342e;
+  --color-scrim: #474747bf;
 }
