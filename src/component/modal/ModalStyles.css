@@ -29,8 +29,8 @@
 .modal__buttons-row {
     display: flex;
     justify-content: center;
-    margin-top: 26.25px;
-    margin-right: 25.25px;
+    margin-top: 15px;
+    margin-right: 25.5px;
 }
 
 .modal__button {
@@ -67,7 +67,7 @@
 .modal__input-row {
     display: flex;
     flex-direction: row;
-    margin-bottom: 11.25px;
+    margin-bottom: 15px;
 }
 
 .modal__input__label {
@@ -98,4 +98,10 @@
 
 .modal__input__box::placeholder {
     color: var(--color-text-variant);
+}
+
+.modal__dropdown {
+    width: 150.5px;
+    height: 26.5px;
+    padding: 0 12px;
 }

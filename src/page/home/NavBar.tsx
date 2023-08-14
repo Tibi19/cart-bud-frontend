@@ -20,6 +20,7 @@ import { emptyUserStorage } from "@/local/emptyUserStorage"
 import { getUniqueElements } from "@/util/getUniqueElements"
 import CreateModal from "@/component/modal/CreateModal"
 import { v4 as uuidv4 } from "uuid"
+import InviteModal from "@/component/modal/InviteModal"
 
 const INIT_STATE_CONSTANT_DEPENDENCY = 0
 const UPDATE_CHANGES_INTERVAL = 8000
@@ -43,6 +44,7 @@ const NavBar = () => {
         onGroupId: "" 
     })
     const [isCreateUserListOpen, setIsCreateUserListOpen] = useState(false)
+    const [isInviteOpen, setIsInviteOpen] = useState(false)
 
     useEffect(() => {
         groupEndpoint.getUserGroups({
@@ -180,6 +182,9 @@ const NavBar = () => {
     const createUserList = (listName: string) => {
         createShoppingList(listName, false, "") // If parent is user, server will take care of the parent id.
     }
+    const sendInvite = (onGroupId: string, toUsername: string) => {
+
+    }
     const openInvitation = () => {}
 
     return (
@@ -242,7 +247,7 @@ const NavBar = () => {
             }
             <NavbarLabelRow
                 title="Invitations"
-                onAdd={openInvitation}
+                onAdd={() => setIsInviteOpen(true)}
                 addContent="Send invitation"
             />
             {
@@ -260,7 +265,7 @@ const NavBar = () => {
                 <CreateModal 
                     isOpen={isCreateGroupOpen}
                     elementTitle="Group"
-                    onConfirm={elementName => createGroup(elementName)}
+                    onConfirm={createGroup}
                     onClose={() => setIsCreateGroupOpen(false)}
                 />
             }
@@ -270,7 +275,7 @@ const NavBar = () => {
                 <CreateModal 
                     isOpen={isCreateUserListOpen}
                     elementTitle="List"
-                    onConfirm={elementName => createUserList(elementName)}
+                    onConfirm={createUserList}
                     onClose={() => setIsCreateUserListOpen(false)}
                 />
             }
@@ -280,11 +285,21 @@ const NavBar = () => {
                 <CreateModal 
                     isOpen={createGroupListState.isCreateOpen}
                     elementTitle="Group List"
-                    onConfirm={elementName => createGroupList(elementName)}
+                    onConfirm={createGroupList}
                     onClose={() => setCreateGroupListState({
                         isCreateOpen: false,
                         onGroupId: ""
                     })}
+                />
+            }
+
+            {
+                isInviteOpen &&
+                <InviteModal 
+                    isOpen={isInviteOpen}
+                    groups={groups}
+                    onConfirm={sendInvite}
+                    onClose={() => setIsInviteOpen(false)}
                 />
             }
         </div>
