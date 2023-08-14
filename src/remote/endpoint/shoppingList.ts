@@ -56,7 +56,7 @@ export const shoppingListEndpoint = {
             })
     },
 
-    createGroupList: (handle: EndpointHandle<ShoppingListRequest, any, any>) => {
+    createList: (handle: EndpointHandle<ShoppingListRequest, any, any>) => {
         const { request, onSuccess, onFallbackError } = { ...defaultEndpointHandle, ...handle }
         remote
             .post("list/create", request)
