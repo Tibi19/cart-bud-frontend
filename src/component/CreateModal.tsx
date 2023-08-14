@@ -25,6 +25,7 @@ const CreateModal = ({ isOpen, elementTitle, onConfirm, onClose }: Props) => {
             <span className="modal__input-row">
                 <p className="modal__input__label">Name:</p>
                 <input
+                    autoFocus
                     type="text"
                     placeholder="Name"
                     value={elementName}

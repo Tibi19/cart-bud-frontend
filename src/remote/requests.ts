@@ -20,7 +20,15 @@ export interface ChangeRequest {
 }
 
 export interface GroupRequest {
-    id: String,
-    name: String,
-    timestampOfLastChange: Number
+    id: string,
+    name: string,
+    timestampOfLastChange: number
+}
+
+export interface ShoppingListRequest {
+    id: string,
+    parentId: string,
+    name: string,
+    hasGroupParent: boolean,
+    timestampOfLastChange: number
 }

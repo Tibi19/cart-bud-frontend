@@ -1,7 +1,7 @@
 import { ShoppingList } from "@/model/models"
 import { EndpointHandle, defaultEndpointHandle } from "./handle"
 import { remote } from "@/remote/remote"
-import { GroupListsRequest } from "@/remote/requests"
+import { GroupListsRequest, ShoppingListRequest } from "@/remote/requests"
 
 export const shoppingListEndpoint = {
 
@@ -52,6 +52,24 @@ export const shoppingListEndpoint = {
                     onError()
                     return
                 }
+                onFallbackError()
+            })
+    },
+
+    createGroupList: (handle: EndpointHandle<ShoppingListRequest, any, any>) => {
+        const { request, onSuccess, onFallbackError } = { ...defaultEndpointHandle, ...handle }
+        remote
+            .post("list/create", request)
+            .then(response => {
+                if (response.status != 200) {
+                    console.log(response)
+                    onFallbackError()
+                    return
+                }
+                onSuccess()
+            })
+            .catch(error => {
+                console.log(error)
                 onFallbackError()
             })
     }

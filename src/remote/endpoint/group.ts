@@ -29,7 +29,7 @@ export const groupEndpoint = {
     },
 
     createGroup: (handle: EndpointHandle<GroupRequest, any, any>) => {
-        const { request, onSuccess, onFallbackError } = { ...defaultEndpointHandle, ...handle}
+        const { request, onSuccess, onFallbackError } = { ...defaultEndpointHandle, ...handle }
         remote
             .post("group/create", request)
             .then(response => {
@@ -42,7 +42,6 @@ export const groupEndpoint = {
             })
             .catch(error => {
                 console.log(error)
-                const response = error.response
                 onFallbackError()
             })
     }

@@ -23,6 +23,12 @@ import { v4 as uuidv4 } from "uuid"
 
 const UPDATE_CHANGES_INTERVAL = 8000
 const ERROR_FALLBACK_CREATE_GROUP = "Could not create group. Please try again later."
+const ERROR_FALLBACK_CREATE_GROUP_LIST = "Could not create group list. Please try again later."
+
+interface CreateGroupListState {
+    isCreateOpen: boolean,
+    onGroupId: string
+}
 
 const NavBar = () => {
     const [username] = useState(localStorage.getItem(KEY_USERNAME) || "User")
@@ -31,7 +37,10 @@ const NavBar = () => {
     const [invitations, setInvitations] = useStore<Invitation[]>(KEY_INVITATIONS, [])
     const navigate = useNavigate()
     const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false)
-    const [isCreateGroupListOpen, setIsCreateGroupListOpen] = useState(false)
+    const [createGroupListState, setCreateGroupListState] = useState<CreateGroupListState>({ 
+        isCreateOpen: false, 
+        onGroupId: "" 
+    })
     const [isCreateUserListOpen, setIsCreateUserListOpen] = useState(false)
 
     useEffect(() => {
@@ -140,7 +149,30 @@ const NavBar = () => {
             onFallbackError: () => alert(ERROR_FALLBACK_CREATE_GROUP)
         })
     }
-    const addGroupList = () => {}
+    const createGroupList = (listName: string) => {
+        if (!createGroupListState.onGroupId) return 
+
+        const newList: ShoppingList = {
+            id: uuidv4(),
+            parentId: createGroupListState.onGroupId,
+            name: listName,
+            hasGroupParent: true,
+            timestampOfLastChange: Date.now()
+        }
+        shoppingListEndpoint.createGroupList({
+            request: {
+                id: newList.id,
+                parentId: newList.parentId,
+                name: newList.name,
+                hasGroupParent: newList.hasGroupParent,
+                timestampOfLastChange: newList.timestampOfLastChange
+            },
+            onSuccess: () => setShoppingLists(current => 
+                [...current, newList]    
+            ),
+            onFallbackError: () => alert(ERROR_FALLBACK_CREATE_GROUP_LIST)
+        })
+    }
     const openInvitation = () => {}
 
     return (
@@ -183,7 +215,10 @@ const NavBar = () => {
                         <NavbarGroupRow
                             key={group.id}
                             groupName={group.name}
-                            onAddList={addGroupList}
+                            onAddList={() => setCreateGroupListState({
+                                isCreateOpen: true,
+                                onGroupId: group.id
+                            })}
                         />
                         {
                             shoppingLists
@@ -220,6 +255,19 @@ const NavBar = () => {
                     elementTitle="Group"
                     onConfirm={elementName => createGroup(elementName)}
                     onClose={() => setIsCreateGroupOpen(false)}
+                />
+            }
+
+            {
+                createGroupListState.isCreateOpen &&
+                <CreateModal 
+                    isOpen={createGroupListState.isCreateOpen}
+                    elementTitle="Group List"
+                    onConfirm={elementName => createGroupList(elementName)}
+                    onClose={() => setCreateGroupListState({
+                        isCreateOpen: false,
+                        onGroupId: ""
+                    })}
                 />
             }
         </div>
