@@ -1,4 +1,4 @@
-import ThemeController from '@/component/ThemeController'
+import ThemeController from '@/component/theme/ThemeController'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { authEndpoint } from '@/remote/endpoint/auth'

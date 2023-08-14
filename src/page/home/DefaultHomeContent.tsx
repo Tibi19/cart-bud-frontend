@@ -1,4 +1,4 @@
-import ThemeController from "@/component/ThemeController"
+import ThemeController from "@/component/theme/ThemeController"
 import "./styles/DefaultHomeStyles.css"
 
 const DefaultHomeContent = () => {
